@@ -5,9 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
 
@@ -34,6 +36,8 @@ public class PieChartView extends View {
     private int strokeWidth;
     private int selectedIndex = 2;
     private float selectedStartAngle = 0.0f;
+
+    private PointF previousTouch = new PointF(0,0);
 
     protected void onDraw(Canvas canvas){
         Paint paint = new Paint();
@@ -104,6 +108,30 @@ public class PieChartView extends View {
 
 
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        float tx = event.getX();
+        float ty = event.getY();
+
+        //float x = (tx / getZoom()) - getTranslate().x;
+        //float y = (ty / getZoom()) - getTranslate().y;
+
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                if(event.getPointerCount() == 1){
+                    //selectedIndex = this.pickCorrelation(x,y);
+                    this.invalidate();
+
+                    this.previousTouch.x = tx;
+                    this.previousTouch.y = ty;
+
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 
     public PieChartView(Context context) {
